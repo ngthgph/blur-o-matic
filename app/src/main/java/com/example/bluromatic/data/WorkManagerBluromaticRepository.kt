@@ -51,7 +51,6 @@ class WorkManagerBluromaticRepository(context: Context) : BluromaticRepository {
         val blurBuilder = OneTimeWorkRequestBuilder<BlurWorker>()
         blurBuilder.setInputData(createInputDataForWorkRequest(blurLevel, imageUri))
         continuation = continuation.then(blurBuilder.build())
-//        workManager.enqueue(blurBuilder.build())
 
         val save = OneTimeWorkRequestBuilder<SaveImageToFileWorker>()
             .build()

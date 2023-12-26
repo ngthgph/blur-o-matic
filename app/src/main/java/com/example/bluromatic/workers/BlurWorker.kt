@@ -27,6 +27,7 @@ class BlurWorker(ctx: Context, params: WorkerParameters): CoroutineWorker(ctx, p
             applicationContext
         )
         return withContext(Dispatchers.IO) {
+            delay(DELAY_TIME_MILLIS)
 
             return@withContext try {
 
@@ -36,26 +37,15 @@ class BlurWorker(ctx: Context, params: WorkerParameters): CoroutineWorker(ctx, p
                     Log.e(TAG, errorMessage)
                     errorMessage
                 }
-                delay(DELAY_TIME_MILLIS)
-//                val picture = BitmapFactory.decodeResource(
-//                    applicationContext.resources,
-//                    R.drawable.android_cupcake
-//                )
+
                 val resolver = applicationContext.contentResolver
                 val picture = BitmapFactory.decodeStream(
                     resolver.openInputStream(Uri.parse(resourceUri))
                 )
-
-//                val output = blurBitmap(picture, 1)
                 val output = blurBitmap(picture, blurLevel)
-
                 val outputUri = writeBitmapToFile(applicationContext, output)
-
                 val outputData = workDataOf(KEY_IMAGE_URI to outputUri.toString())
-//                makeStatusNotification(
-//                    "Output is $outputUri",
-//                    applicationContext
-//                )
+
                 Result.success(outputData)
 
             } catch(throwable: Throwable) {
